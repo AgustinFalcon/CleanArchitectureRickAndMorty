@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">CleanCode</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!--Log In-->
+    <string name="name_login">Nombre</string>
+    <string name="password_login">Password</string>
+
+    <!--Log In-->
+    <string name="email_singup">Email</string>
+    <string name="name_singup">Nombre</string>
+    <string name="password_singup">Password</string>
+    <string name="btn_login">Iniciar sesión</string>
+    <string name="btn_registro">Registro</string>
+
+</resources>
