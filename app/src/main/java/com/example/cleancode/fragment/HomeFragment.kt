@@ -15,6 +15,9 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
+    //this url is for test
+    private val baseUrl = "https://rickandmortyapi.com/api/"
+
     private var _binding : FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
@@ -27,7 +30,7 @@ class HomeFragment : Fragment() {
     ): View? {
         _binding = FragmentHomeBinding.inflate(layoutInflater, container, false)
 
-        personajeViewModel.setUrl("https://rickandmortyapi.com/api/")
+        personajeViewModel.setUrl(baseUrl)
         personajeViewModel.getPersonaje()
         setUpRecyclerView()
 
