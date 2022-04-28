@@ -3,7 +3,12 @@ package com.example.cleancode.repository.personaje
 import android.util.Log
 import com.example.cleancode.db.entities.PersonajeDAO
 import com.example.cleancode.network.parsedata.personaje.RemotePersonaje
+import com.example.cleancode.network.retrofit.ApiError
+import com.example.cleancode.network.retrofit.ApiException
+import com.example.cleancode.network.retrofit.ApiSuccess
 import com.example.cleancode.network.retrofit.AppApi
+import retrofit2.HttpException
+import retrofit2.Response
 import javax.inject.Inject
 
 
@@ -11,24 +16,44 @@ class PersonajeRepositoryImpl @Inject constructor(private val personajeDAO: Pers
 
     private var baseUrl = ""
 
-    override suspend fun getPersonaje(): RemoteState {
+    override suspend fun getPersonaje(): NetworkResult {
         return try {
             val call = AppApi.getInstance(baseUrl).getPersonajes() //dentro o fuera del try?
             Log.d(TAG, "Hello. API Call with ${call.code()} @ URL: ${call.raw().request.url}")
             if (call.isSuccessful) {
                 if (!(call.body()?.personajes!!.isNullOrEmpty())) {
-                    RemoteState.Success(call.body()!!.personajes)
+                    //Mapear a base de datos
+                    NetworkResult.Success(call.body()!!.personajes)
                 } else {
-                    RemoteState.Loading(call.body().toString())
+                    NetworkResult.Loading(call.body().toString())
                 }
             } else {
-                RemoteState.Error(Exception(call.errorBody().toString()))
+                NetworkResult.Error(Exception(call.errorBody().toString()))
             }
 
         } catch (e: Exception) {
-            RemoteState.Error(e)
+            NetworkResult.Error(e)
         }
     }
+
+    /*suspend fun <T: Any> handleApi(execute: suspend() -> Response<T>) : NetworkResult<T> {
+        return try {
+            val response = execute()
+            val body = response.body()
+
+            if (response.isSuccessful && body != null) {
+                ApiSuccess(body)
+            } else {
+                ApiError(code = response.code(), message = response.message())
+            }
+
+        } catch (e: HttpException) {
+            //ApiError(code = e.code(), message = e.message())
+        } catch (e: Throwable) {
+            //ApiException(e = e)
+        }
+    }*/
+
 
     override suspend fun setUrl(url: String) {
         this.baseUrl = url
@@ -41,8 +66,8 @@ class PersonajeRepositoryImpl @Inject constructor(private val personajeDAO: Pers
 
 }
 
-sealed class RemoteState {
-    data class Success(val personajes: List<RemotePersonaje>) : RemoteState()
-    data class Error(val error: Exception) : RemoteState()
-    data class Loading(val cargando: String) : RemoteState()
+sealed class NetworkResult {
+    data class Success(val personajes: List<RemotePersonaje>) : NetworkResult()
+    data class Error(val error: Exception) : NetworkResult()
+    data class Loading(val cargando: String) : NetworkResult()
 }
