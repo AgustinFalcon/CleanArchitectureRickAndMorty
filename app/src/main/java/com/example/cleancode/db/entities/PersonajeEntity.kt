@@ -6,23 +6,24 @@ import androidx.room.PrimaryKey
 
 
 @Entity(tableName = "table_personaje")
-class PersonajeEntity () {
+data class PersonajeEntity(
+
+    @PrimaryKey(autoGenerate = false)
+    @ColumnInfo(name = "id")
+    var id: Int,
 
     @ColumnInfo(name = "name")
-    val name : String = ""
+    var name : String,
 
     @ColumnInfo(name = "status")
-    val status: String = ""
+    var status: String,
 
     @ColumnInfo(name = "species")
-    val species: String = ""
+    var species: String,
 
     @ColumnInfo(name = "gender")
-    val gender: String = ""
+    var gender: String,
 
     @ColumnInfo(name = "image")
-    val image: String = ""
-
-    @PrimaryKey()
-    val id: Int = 0
-}
+    var image: String,
+)

@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cleancode.databinding.ItemRvFragmentHomeAdapterBinding
 import com.example.cleancode.network.parsedata.personaje.RemotePersonaje
+import com.example.cleancode.repository.personaje.Personaje
 
 
 class PersonajeAdapter : RecyclerView.Adapter<PersonajeAdapter.PersonajeViewHolder>() {
@@ -34,19 +35,19 @@ class PersonajeAdapter : RecyclerView.Adapter<PersonajeAdapter.PersonajeViewHold
 
     inner class PersonajeViewHolder(val binding: ItemRvFragmentHomeAdapterBinding) : RecyclerView.ViewHolder(binding.root)
 
-    private val diffCallBack = object : DiffUtil.ItemCallback<RemotePersonaje>(){
-        override fun areItemsTheSame(oldItem: RemotePersonaje, newItem: RemotePersonaje): Boolean {
+    private val diffCallBack = object : DiffUtil.ItemCallback<Personaje>(){
+        override fun areItemsTheSame(oldItem: Personaje, newItem: Personaje): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: RemotePersonaje, newItem: RemotePersonaje): Boolean {
+        override fun areContentsTheSame(oldItem: Personaje, newItem: Personaje): Boolean {
             return oldItem == newItem
         }
     }
 
     //Take the values of de list from HomeFragment
     private val differ = AsyncListDiffer(this, diffCallBack)
-    var personajes: List<RemotePersonaje>
+    var personajes: List<Personaje>
         get() = differ.currentList
         set(value) {
             differ.submitList(value)

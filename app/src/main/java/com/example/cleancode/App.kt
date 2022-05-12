@@ -12,10 +12,6 @@ class App : Application() {
 
     val appScope = CoroutineScope(SupervisorJob())
 
-    private val db = {
-        HelperDataBase.getDatabase(this)
-    }
-
     companion object {
         lateinit var prefs : SharedPreference
     }

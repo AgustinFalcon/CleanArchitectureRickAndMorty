@@ -15,8 +15,13 @@ abstract class HelperDataBase : RoomDatabase() {
 
     abstract fun personajeDao() : PersonajeDAO
 
+    companion object {
+        val DATABASE_NAME: String = "personaje_db"
+    }
 
-    private class HelperDatabaseCallback(private val scope: CoroutineScope) : RoomDatabase.Callback() {
+
+
+    /*private class HelperDatabaseCallback(private val scope: CoroutineScope) : RoomDatabase.Callback() {
         override fun onCreate(db: SupportSQLiteDatabase) {
             super.onCreate(db)
             INSTANCE?.let { database ->
@@ -26,8 +31,6 @@ abstract class HelperDataBase : RoomDatabase() {
             }
         }
     }
-
-
     companion object {
         @Volatile
         private var INSTANCE : HelperDataBase? = null
@@ -45,5 +48,5 @@ abstract class HelperDataBase : RoomDatabase() {
                 instance
             }
         }
-    }
+    }*/
 }

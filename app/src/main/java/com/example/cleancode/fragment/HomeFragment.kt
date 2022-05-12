@@ -9,14 +9,15 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.cleancode.adapter.PersonajeAdapter
 import com.example.cleancode.databinding.FragmentHomeBinding
+import com.example.cleancode.network.retrofit.NetworkResult
+import com.example.cleancode.repository.personaje.Personaje
+import com.example.cleancode.viewmodels.PersonajeStateEvent
 import com.example.cleancode.viewmodels.PersonajeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
-    //this url is for test
-    private val baseUrl = "https://rickandmortyapi.com/api/"
 
     private var _binding : FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -30,9 +31,10 @@ class HomeFragment : Fragment() {
     ): View? {
         _binding = FragmentHomeBinding.inflate(layoutInflater, container, false)
 
-        personajeViewModel.setUrl(baseUrl)
-        personajeViewModel.getPersonaje()
+        suscribeObservers()
         setUpRecyclerView()
+        personajeViewModel.setPjStateEvent(PersonajeStateEvent.GetPersonajeEvent)
+
 
         return binding.root
     }
@@ -42,16 +44,35 @@ class HomeFragment : Fragment() {
         //Combinar los estados de repository con los estados de UI
     }
 
+    private fun suscribeObservers() {
+        personajeViewModel.pjDataState.observe(viewLifecycleOwner) {
+            when (it) {
+                is NetworkResult.Success<List<Personaje>> -> {
+                    displayProgressBar(false)
+                    personajeAdapter.personajes = it.data
+                }
+                is NetworkResult.Error -> {
+                    displayProgressBar(false)
+
+                }
+                is NetworkResult.Loading -> {
+                    displayProgressBar(true)
+                }
+            }
+        }
+    }
+
+
+    private fun displayProgressBar(isDisplayed: Boolean) {
+        binding.progressBar.visibility = if (isDisplayed) View.VISIBLE else View.GONE
+    }
+
     private fun setUpRecyclerView() {
         personajeAdapter = PersonajeAdapter()
         binding.rvFragmentHome.apply {
             adapter = personajeAdapter
             layoutManager = LinearLayoutManager(context)
             setHasFixedSize(true)
-        }
-
-        personajeViewModel.personajeLiveDataSuccess.observe(viewLifecycleOwner) {
-            personajeAdapter.personajes = it
         }
     }
 

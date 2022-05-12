@@ -1,7 +1,7 @@
-package com.example.cleancode.network.parsedata.personaje
+package com.example.cleancode.repository.personaje
 
 
-data class RemotePersonaje (
+data class Personaje(
     var id: Int,
     var name: String,
     var status: String,

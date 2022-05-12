@@ -1,9 +1,11 @@
 package com.example.cleancode.network.retrofit
 
+import retrofit2.Response
+import java.lang.Exception
 
 
-sealed class NetworkResult <T> (val data: T? = null, val message: String? = null) {
-    class Success<T> (data: T) : NetworkResult<T>(data)
-    class Error<T> (data: T? = null, message: String? = null) : NetworkResult<T>(data, message)
-    //class Exception<T> (e: Throwable) : NetworkResult<T>(e)
+sealed class NetworkResult <out T> {
+    data class Success<out T> (val data: T): NetworkResult<T>()
+    data class Error(val error: Exception, var code: Int? = null): NetworkResult<Nothing>()
+    object Loading: NetworkResult<Nothing>()
 }
